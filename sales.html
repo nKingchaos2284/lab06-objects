@@ -2,38 +2,73 @@
 <html lang="en">
 
 <head>
-
-    <title>Sales Data</title>
-    <link rel="stylesheet" href="css/reset.css">
-    <link rel="stylesheet" href="css/sales.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Salmon Cookie Stand</title>
+  <link rel="stylesheet" href="reset.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
-    <header>
-        <div class="home">
-            <a href="https://ali-coder1996.github.io/cookie-stand/">home</a>
-            <a href="https://github.com/Ali-coder1996/cookie-stand">contact inf</a>
-        </div>
-    </header>
-    <main>
-        <table id='sales-data'>
-        </table>
-        <fieldset>
-            <legend>Add new Cookies</legend>
-            <form id="addNewCity">
-                <label for="maxCustPerHour">max-nubmer</label>
-                <input type="text" name="maxCustPerHour" id="maxCustPerHour" placeholder="number"><br>
-                <label for="minCustPerHour">min-number</label>
-                <input type="text" name="minCustPerHour" id="minCustPerHour" placeholder="number"><br>
-                <label for="avgCookiePerSale">avg-number</label>
-                <input type="text" name="avgCookiePerSale" id="avgCookiePerSale" placeholder="number"><br>
-                <label for="cityName">city name</label>
-                <input type="text" name="cityName" id="cityName" placeholder="Tafila"><br>
-                <button type="submit">add</button>
-            </form>
-        </fieldset>
-    </main>
-    <script src="js/app.js"></script>
-</body>
+<body class="sales">
+  <header>
+    <h1>Salmon Cookie Sales </h1>
+    <h3>View & Update Cookie Sales Per Store</h3>
+  </header>
 
+  <main id="main-content">
+
+    <nav>
+      <ul>
+        <li> <img src="../img/salmon.png"></li>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="https://en.wikipedia.org/wiki/Salmon" target="_blank">learn about salmon</a></li>
+        <li> <img src="../img/salmon.png"></li>
+      </ul>
+    </nav>
+
+    <form id="location-form">
+      <fieldset>
+        
+        <label>
+          Location name:
+          <input name="locationInput" type="text">
+        </label>
+        
+        <br>
+        
+        <label>
+          Average cookies purchased:
+          <input name="avgCookiesInput" type="number">
+        </label>
+        
+        <br>
+        
+        <label>
+          Minimum Customers:
+          <input name="minInput" type="number">
+        </label>
+
+        <br>
+        
+        <label>
+          Maximum Customers:
+          <input name="maxInput" type="number">
+        </label>
+
+        <br>
+
+        <button id="submit" type="submit">Submit</button>
+
+      </fieldset>
+    </form>
+
+  </main>
+
+  <footer>
+
+    <script src="app.js"></script>
+  </footer>
+
+</body>
 </html>

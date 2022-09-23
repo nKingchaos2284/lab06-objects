@@ -1,143 +1,202 @@
 'use strict';
 
-//global Variables
-CookieStand.all = [];
-CookieStand.totalHourArray = [];
-CookieStand.storeForm = document.getElementById('storeForm');
-CookieStand.standsTable = document.getElementById('standsTable');
-CookieStand.allLocationsRef = [];
-//all are props of CookieS
-//TODO add no maximum lower than minimum if(min > max) {return alert('min must be less than max')}
-//
-function CookieStand(name, minCustomers, maxCustomers, aveCookies){
+var myStores = ['Seattle ', 'Tokyo ', 'Dubai ', 'Paris ', 'Lima '];
+var hours = ['6am', '7am', '8am', '9am', '10am', '11am', '12pm', '1pm', '2pm', '3pm', '4pm', '5pm', '6pm', '7pm', '8pm', '9pm'];
+
+var stores = [];
+
+function Store(name, minHourlyCustomers, maxHourlyCustomers, avgCookiesPerCustomer) {
+  this.minHourlyCustomers = minHourlyCustomers;
+  this.maxHourlyCustomers = maxHourlyCustomers;
+  this.avgCookiesPerCustomer = avgCookiesPerCustomer;
   this.name = name;
-  CookieStand.allLocationsRef.push(this.name);
-  this.minCustomers = minCustomers;
-  this.maxCustomers = maxCustomers;
-  this.aveCookies = aveCookies;
-  this.openTime = 6;
-  this.closeTime = 21;
-  this.hours = ['6am', '7am', '8am', '9am', '10am', '11am', '12pm', '1pm', '2pm', '3pm', '4pm', '5pm', '6pm', '7pm', '8pm'];
-  this.cookieSoldArray = [];
-  this.cookieSoldTable = [];
-  this.sumCookieSold = 0;
-  CookieStand.all.push(this);
-  this.randRate();
-  this.createHourlyRateTable();
+  this.cookiesPerHourArr = [];
+  this.totalDailyCookies = 0;
+
+
+  stores.push(this);
+  this.render();
+
 }
 
+Store.prototype.cookiesPerHour = function () {
+  console.log('inside cookiesPerhour function');
 
-CookieStand.prototype.randRate = function(){
-  for(let i = 0; i < (this.closeTime - this.openTime); i++){
-    this.cookieSoldArray.push(Math.floor(this.aveCookies * (Math.random() * (this.maxCustomers - this.minCustomers + 1) + this.minCustomers)));
+  for (var i = 0; i < hours.length; i++) {
+    console.log('inside for loop at ' + i);
+
+    // getting random amount of customers between two numbers min and max
+
+    var numOfCustomers = Math.floor(Math.random() * (this.maxHourlyCustomers - this.minHourlyCustomers + 1))
+    console.log(numOfCustomers);
+
+    // getting number of cookies
+
+    var numOfCookies = Math.floor(numOfCustomers * this.avgCookiesPerCustomer);
+    console.log(numOfCookies);
+
+    this.cookiesPerHourArr.push(numOfCookies);
+
+    this.totalDailyCookies += numOfCookies;
+
   }
-  this.cookieSoldTotal = 0;
-  for(i in this.cookieSoldArray){
-    this.cookieSoldTotal += this.cookieSoldArray[i];
-  }
-  this.cookieSoldArray.push(this.cookieSoldTotal);
+  this.cookiesPerHourArr.push(this.totalDailyCookies);
+  console.log(this.totalDailyCookies);
+  console.log(this.cookiesPerHourArr);
+
 };
 
-CookieStand.prototype.createHourlyRateTable = function(){
-  this.trEl = document.createElement('tr');
-  CookieStand.standsTable.appendChild(this.trEl);
-  let locCSArray = this.cookieSoldArray.slice(0);
-  // this.cookieSoldArray.unshift(this.name);
-  locCSArray.unshift(this.name);
 
-  for(let i = 0; i < locCSArray.length; i++){
-    this.tdEl = document.createElement('td');
-    this.tdEl.textContent = locCSArray[i];
-    this.trEl.appendChild(this.tdEl);
+Store.prototype.render = function () {
+
+  //body
+  var tableBody = document.getElementById('tbl-body');
+  var storeRow = document.createElement('tr');
+  var tdStoreName = document.createElement('td');
+  tdStoreName.textContent = this.name;
+  storeRow.appendChild(tdStoreName);
+
+  this.cookiesPerHour();
+  console.log(this.cookiesPerHourArr);
+  for (var i = 0; i < this.cookiesPerHourArr.length; i++) {
+    var tdCookieCount = document.createElement('td');
+    tdCookieCount.textContent = this.cookiesPerHourArr[i];
+    storeRow.appendChild(tdCookieCount);
   }
+
+  tableBody.appendChild(storeRow);
 };
 
-let makeHeaderRow = function(){
-  let hoursLocal = ['Store', '6am', '7am', '8am', '9am', '10am', '11am', '12pm', '1pm', '2pm', '3pm', '4pm', '5pm', '6pm', '7pm', '8pm', 'Total'];
-  let trEl = document.createElement('tr');
-  for(let i = 0; i < hoursLocal.length; i++){
-    let thEl = document.createElement('th');
-    thEl.textContent = hoursLocal[i];
-    trEl.appendChild(thEl);
+function createTable() {
+  var section = document.getElementById('main-content');
+  var table = document.createElement('table');
+  var tableHead = document.createElement('thead');
+  var tableBody = document.createElement('tbody');
+  var tableFooter = document.createElement('tFooter');
+
+  section.appendChild(table);
+  table.appendChild(tableHead);
+  table.appendChild(tableBody);
+  table.appendChild(tableFooter);
+
+  table.id = 'Cookie-Table';
+  tableHead.id = 'tbl-head';
+  tableBody.id = 'tbl-body';
+  tableFooter.id = 'tbl-foot';
+  table.className = 'tbl';
+
+  //create table header
+  var tableHeader = document.getElementById('tbl-head');
+  var tableHeaderRow = document.createElement('tr');
+
+  //first table head is empty
+  var emptyTableHead = document.createElement('th');
+  tableHeaderRow.appendChild(emptyTableHead);
+
+
+
+
+  //remainder of table heads are store hours
+  for (var i = 0; i < hours.length; i++) {
+
+    var tableHead = document.createElement('th');
+    tableHead.textContent = hours[i];
+    tableHeaderRow.appendChild(tableHead);
   }
-  CookieStand.standsTable.appendChild(trEl);
-};
 
-makeHeaderRow();
+  tableHeader.appendChild(tableHeaderRow);
 
-new CookieStand('Pike', 23, 65, 6.3);
-new CookieStand('SeaTac', 3, 24, 1.2);
-new CookieStand('Seattle Center', 11, 38, 3.7 );
-new CookieStand('Capitol Hill', 20, 38, 2.3);
-new CookieStand('Alki', 2, 16, 4.6);
+  // Last table head is the total
+  var global = document.createElement('th')
+  global.textContent = 'Total';
+  tableHeaderRow.appendChild(global);
 
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//new Location function
-//function to re-render table
-function renderTable(){
-  CookieStand.standsTable.innerHTML = null;
-  makeHeaderRow();
-  for(let i in CookieStand.all){
-    CookieStand.all[i].createHourlyRateTable();
-  }
-  sumColumns();
 }
 
-// // helper functions
-// CookieStand.newElement = function(type, content, parent){
-//   let newEl = document.createElement(type);
-// };
+function createFooterRow() {
+  //footer (alignment didn't look right when I used tbl-foot so I changed to tbl-body...why didn't tbl-foot work??)
+  var tableBody = document.getElementById('tbl-body');
+  var totalRow = document.createElement('tr');
 
-function handleLocationSubmit(event) {
+  totalRow.setAttribute('id', 'totalRow'); //need this to delete the total row and recreate if new store is added
+
+  var tdTotalsLabel = document.createElement('td');
+  var totalCookiesPerDay = 0;
+  tdTotalsLabel.textContent = 'Totals';
+  totalRow.appendChild(tdTotalsLabel);
+
+  //for loop will loop through the hours
+  for (var i = 0; i < hours.length; i++) {
+    var totalCookiesPerHour = 0;
+
+    //for loop for stores
+    for (var j = 0; j < stores.length; j++) {
+      totalCookiesPerHour += stores[j].cookiesPerHourArr[i];
+    }
+    totalCookiesPerDay += totalCookiesPerHour;
+
+    var tdTotalCookies = document.createElement('td');
+    tdTotalCookies.textContent = totalCookiesPerHour;
+    totalRow.appendChild(tdTotalCookies);
+
+  }
+  var dailyTotalEl = document.createElement('td');
+  dailyTotalEl.textContent = totalCookiesPerDay;
+  totalRow.appendChild(dailyTotalEl);
+  tableBody.appendChild(totalRow);
+
+
+}
+
+createTable();
+
+
+new Store('Seattle', 23, 65, 6.3);
+new Store('Tokyo', 3, 24, 1.2);
+new Store('Dubai', 15, 69, 3.7);
+new Store('Paris', 20, 38, 2.3);
+new Store('Lima', 2, 16, 4.6);
+
+createFooterRow();
+
+console.log(stores);
+
+
+var locationForm = document.getElementById('location-form');
+locationForm.addEventListener('submit', function (event) {
   event.preventDefault();
-  // form validation
-  let name = event.target.name.value;
-  let minCustomers = parseInt(event.target.minCustomers.value);
-  let maxCustomers = parseInt(event.target.maxCustomers.value);
-  let aveCookies = parseInt(event.target.aveCookies.value);
 
-  if(CookieStand.allLocationsRef.indexOf(name) > -1){
-    CookieStand.all[CookieStand.allLocationsRef.indexOf(name)].minCustomers = minCustomers;
-    CookieStand.all[CookieStand.allLocationsRef.indexOf(name)].maxCustomers = maxCustomers;
-    CookieStand.all[CookieStand.allLocationsRef.indexOf(name)].aveCookies = aveCookies;
-    CookieStand.all[CookieStand.allLocationsRef.indexOf(name)].cookieSoldArray = [];
-    CookieStand.all[CookieStand.allLocationsRef.indexOf(name)].randRate();
-    renderTable();
-    return;
-  }
+  var locationInput = event.target.locationInput.value;
+  var minInput = event.target.minInput.value;
+  var maxInput = event.target.maxInput.value;
+  var avgCookiesInput = event.target.avgCookiesInput.value;
 
-  let newCookieStand = new CookieStand(name,minCustomers,maxCustomers, aveCookies);
+  //delete total row
+  var totalRow = document.getElementById('totalRow');
+  totalRow.parentNode.removeChild(totalRow);
 
-  event.target.name.value = null;
-  event.target.minCustomers.value = null;
-  event.target.maxCustomers.value = null;
-  event.target.aveCookies.value = null;
-  renderTable();
-}
+  //create new store
+  new Store(locationInput, minInput, maxInput, avgCookiesInput);
 
-CookieStand.storeForm.addEventListener('submit', handleLocationSubmit);
+  //recreate footer with the new store that's been added
+  createFooterRow();
+  
+  console.log(stores);
+
+  event.target.locationInput.value = '';
+  event.target.minInput.value = '';
+  event.target.maxInput.value = '';
+  event.target.avgCookiesInput.value = '';
+});
 
 
-//end table construction adds
-let sumColumns = function(){
-  CookieStand.totalHourArray = [];
-  for(let j = -1; j < CookieStand.all[0].cookieSoldArray.length ; j++){
-    let hourTotal = 0;
-    for(let k in CookieStand.all){
-      hourTotal = hourTotal + CookieStand.all[k].cookieSoldArray[j];
-    }
-    CookieStand.totalHourArray.push(hourTotal);
-  }
-  let trEl = document.createElement('tr');
-  CookieStand.standsTable.appendChild(trEl);
-  for (let i in CookieStand.totalHourArray){
-    let tdEl = document.createElement('td');
-    if(i == 0){
-      tdEl.textContent = 'Total';
-    }else{
-      tdEl.textContent = CookieStand.totalHourArray[i];
-    }
-    trEl.appendChild(tdEl);
-  }
-};
-sumColumns();
+
+
+
+
+
+
+
+
+
+
