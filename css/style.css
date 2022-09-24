@@ -1,11 +1,13 @@
 body {
-  background-color:#181342;
-  color: #b57b8c;
+  background-image: url("salmonbaby.jpeg");
+  /* background-color:#181342; */
+  color: #0e0105;
   margin: 0px;
 }
 
+
 header {
-  background-image: url("https://unsplash.com/photos/ThkMexbvyyI");
+  
   padding-top: 60px;
   padding-bottom: 60px;
   color: #181342;
@@ -34,7 +36,7 @@ nav li {
 nav li a {
   padding: 14px 16px;
   text-align: center;
-  color: #b57b8c;
+  color: #7b98b5;
   text-decoration: none;
   text-transform: capitalize;
 }
@@ -62,7 +64,7 @@ th {
   padding-bottom: 1em;
   font-weight: bold;
   background-color: rgb(70, 63, 62);
-  color:#b57b8c;
+  color:#7b98b5;
 }
 h1 {
   text-align: center;
